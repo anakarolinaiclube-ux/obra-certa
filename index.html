@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Obra Certa Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#F4F1EC; --bg2:#EDE9E2; --white:#FFFFFF; --black:#1A1612;
+  --brown:#3D2B1F; --orange:#E07B39; --orange-soft:rgba(224,123,57,0.12);
+  --orange-dark:#C4622A; --green:#4A8C5C; --green-soft:rgba(74,140,92,0.1);
+  --red:#C0392B; --text:#1A1612; --muted:#8A7F76; --muted2:#C4BAB2;
+  --border:rgba(26,22,18,0.08); --r:18px; --rs:12px; --rxs:8px;
+}
+body{font-family:'Poppins',sans-serif;color:var(--text);display:flex;justify-content:center;background:#1A1612;height:100vh;overflow:hidden}
+.shell{width:100%;max-width:390px;height:100vh;position:relative;overflow:hidden;background:var(--bg);display:flex;flex-direction:column}
+#splash{position:absolute;inset:0;z-index:500;background:var(--brown);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.5s ease}
+.sp-logo{font-family:'Outfit',sans-serif;font-size:2.2rem;font-weight:800;color:#F4F1EC}
+.sp-logo span{color:var(--orange)}
+#app{display:none;flex-direction:column;height:100%;opacity:0;transition:opacity 0.3s}
+.topbar{padding:44px 20px 10px;background:var(--brown);color:white}
+.tabs-row{display:flex;background:var(--brown);padding:0 16px 14px;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tab{padding:7px 14px;border-radius:99px;font-size:0.7rem;font-weight:600;cursor:pointer;border:1.5px solid rgba(244,241,236,0.15);background:transparent;color:rgba(244,241,236,0.5);white-space:nowrap}
+.tab.on{background:var(--orange);color:#fff;border-color:var(--orange)}
+.content{flex:1;overflow-y:auto;padding:16px 16px 100px;scrollbar-width:none}
+.panel{display:none}
+.panel.on{display:block}
+.card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:12px;padding:20px}
+.field-group{margin-bottom:15px}
+.field-label{font-size:0.66rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px;display:block}
+.field-input, select{width:100%;background:rgba(255,255,255,0.7);border:1.5px solid var(--border);border-radius:var(--rs);padding:12px;font-family:inherit;font-size:0.9rem}
+.btn{width:100%;padding:15px;border-radius:var(--r);border:none;font-weight:600;cursor:pointer;background:var(--brown);color:white;transition:0.2s}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+#aiResult{background:var(--orange-soft);padding:15px;border-radius:var(--rs);font-size:0.85rem;line-height:1.5;color:var(--brown);border:1px dashed var(--orange)}
+#aiResult h4{margin-bottom:10px;color:var(--orange-dark)}
+.navbar{position:absolute;bottom:0;width:100%;height:70px;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center}
+.nav-item{text-align:center;font-size:0.6rem;color:var(--muted2);cursor:pointer}
+.nav-item.on{color:var(--orange)}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div id="splash"><div class="sp-logo">Obra<span>Certa</span></div></div>
+
+  <div id="app">
+    <div class="topbar">
+      <div style="font-family:'Outfit';font-size:1.2rem;font-weight:800">Obra<span>Certa</span> AI</div>
+    </div>
+    
+    <div class="tabs-row">
+      <button class="tab on" onclick="switchTab('calc')">Calculadora IA</button>
+      <button class="tab" onclick="switchTab('obras')">Obras</button>
+      <button class="tab" onclick="switchTab('perfil')">Perfil</button>
+    </div>
+
+    <div class="content">
+      <!-- PAINEL CALCULADORA -->
+      <div class="panel on" id="panel-calc">
+        <div class="card">
+          <h3 style="margin-bottom:15px;font-family:'Outfit'">Calculadora Inteligente</h3>
+          
+          <div class="field-group">
+            <label class="field-label">O que será feito?</label>
+            <select id="superficie">
+              <option value="piso">Piso / Revestimento</option>
+              <option value="parede">Parede / Pintura</option>
+              <option value="reboco">Reboco / Chapisco</option>
+              <option value="laje">Laje</option>
+              <option value="forro">Forro</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Tipo de Material</label>
+            <select id="material">
+              <option value="porcelanato">Porcelanato</option>
+              <option value="cerâmica">Cerâmica</option>
+              <option value="laminado">Laminado</option>
+              <option value="vinílico">Vinílico</option>
+              <option value="pedra">Pedras Naturais</option>
+              <option value="tinta-acrilica">Tinta Acrílica</option>
+            </select>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="field-group">
+              <label class="field-label">Largura (m)</label>
+              <input type="number" id="largura" class="field-input" placeholder="0.00">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Altura/Comp (m)</label>
+              <input type="number" id="altura" class="field-input" placeholder="0.00">
+            </div>
+          </div>
+
+          <button class="btn" id="btnCalcular" onclick="calcularOrcamento()">Gerar Orçamento com IA</button>
+        </div>
+
+        <div id="resultBox" style="display:none" class="card">
+          <div id="aiResult">Processando...</div>
+        </div>
+      </div>
+
+      <!-- OUTROS PAINÉIS (SIMPLIFICADOS PARA MVP) -->
+      <div class="panel" id="panel-obras">
+        <div class="card">Obras em andamento aparecerão aqui.</div>
+      </div>
+      <div class="panel" id="panel-perfil">
+        <div class="card">Configurações da conta.</div>
+      </div>
+    </div>
+
+    <div class="navbar">
+      <div class="nav-item on" onclick="switchTab('calc')">📐<br>Calc</div>
+      <div class="nav-item" onclick="switchTab('obras')">🏗️<br>Obras</div>
+      <div class="nav-item" onclick="switchTab('perfil')">👤<br>Perfil</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Splash Logic
+window.onload = () => {
+  setTimeout(() => {
+    document.getElementById('splash').style.opacity = '0';
+    setTimeout(() => {
+      document.getElementById('splash').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+      setTimeout(() => document.getElementById('app').style.opacity = '1', 50);
+    }, 500);
+  }, 1500);
+};
+
+// Tab Logic
+function switchTab(t) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  document.getElementById('panel-' + t).classList.add('on');
+  event.target.classList.add('on');
+}
+
+// IA Logic
+async function calcularOrcamento() {
+  const btn = document.getElementById('btnCalcular');
+  const resultBox = document.getElementById('resultBox');
+  const aiResult = document.getElementById('aiResult');
+  
+  const data = {
+    superficie: document.getElementById('superficie').value,
+    material: document.getElementById('material').value,
+    largura: document.getElementById('largura').value,
+    altura: document.getElementById('altura').value
+  };
+
+  if(!data.largura || !data.altura) return alert("Preencha as medidas!");
+
+  btn.disabled = true;
+  btn.innerText = "Consultando IA...";
+  resultBox.style.display = "block";
+  aiResult.innerHTML = "Mestre de obras está fazendo os cálculos...";
+
+  try {
+    const response = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const resJson = await response.json();
+    aiResult.innerHTML = resJson.result;
+  } catch (e) {
+    aiResult.innerHTML = "Erro ao calcular. Verifique sua conexão e chave de API.";
+  } finally {
+    btn.disabled = false;
+    btn.innerText = "Gerar Orçamento com IA";
+  }
+}
+</script>
+
+</body>
+</html>
